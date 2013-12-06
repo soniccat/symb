@@ -6,17 +6,23 @@ import java.util.Date;
 import java.util.Vector;
 
 public class XcodePackageManager extends FileManager {
+	
+	public String namePrefix;
+	public String nameSuffix;
 
 	public XcodePackageManager(FileSystem fileSystem) 
 	{
 		super(fileSystem);
+		this.namePrefix = "";
+		this.nameSuffix = "";
 	}
 
 	public void storePackage(XcodePackage pack) 
 	{
 		DateFormat dateFormat = new SimpleDateFormat("MM_dd_yyyy HH-mm-ss");
 		Date date = new Date();
-		String folderName = dateFormat.format(date);
+		
+		String folderName = this.namePrefix + dateFormat.format(date) + this.nameSuffix;
 		Path folderPath = Paths.get(this.fileSystem.path()
 				+ java.io.File.separator + folderName);
 

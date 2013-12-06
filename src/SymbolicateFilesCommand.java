@@ -38,4 +38,10 @@ public class SymbolicateFilesCommand implements Command {
 			}
 		}
 	}
+
+	@Override
+	public int resultCode() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

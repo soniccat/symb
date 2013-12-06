@@ -27,9 +27,5 @@ public class XcodeBuldResultParser implements StringParser {
 		    } else {
 		    }
 		}
-		
-		if (this.appPath == null) {
-			System.out.println("CODESIGNING_FOLDER_PATH hasn't found. Add variables logging in your build step.");
-		}
 	}
 }

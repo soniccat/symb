@@ -79,7 +79,6 @@ public class LocalFileSystem implements FileSystem {
 			nextByte = inputStream.read(buffer, 0, buffer.length);
 			inputStream.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			nextByte = -1;
 		}
@@ -89,7 +88,7 @@ public class LocalFileSystem implements FileSystem {
 	
 	public void createFolder(Path path) {
 		java.io.File file = new java.io.File(path.toString());
-		file.mkdir();
+		file.mkdirs();
 	}
 }
 

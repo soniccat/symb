@@ -16,6 +16,8 @@ import java.nio.charset.Charset;
  * -symbolicate -c "./crash.crash" -o "./symbolicated" -arch armv7
  */
 
+//-symbolicate -c "./crash.crash" -o "./symbolicated" -arch armv7
+
 public class Main 
 {	
     public static void main ( String [] arguments )
@@ -95,21 +97,22 @@ public class Main
     	}
     	*/
 
-    	
     	if (arguments.length == 0) {
     		System.out.print(helpString);
     		return;
     	}
-    	
+
     	ArgsParser argsParser = new ArgsParser();
     	Command command = argsParser.parse(arguments);
-    	
+
     	if (command != null) {
     		command.run();
+    		System.exit(command.resultCode());
     	} else {
     		System.out.printf("Parse error: %s", argsParser.errorDescription);
     	}
-    	
+
+    	System.exit(1);
     }
     
     static String helpString = "Help is under construction";

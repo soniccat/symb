@@ -8,11 +8,39 @@ public class CommandFactory {
 	{
 		Command resultCommand = null;
 		if (name.equals("-build")) {
-			if (parameters.size() == 0) {
+			
+			Iterator<String> iterator = parameters.iterator();
+			String parameterName = null;
+			String buildString = null;
+			String namePrefix = "";
+			String nameSuffix = "";
+			Path outputPath = Paths.get(".");
+			while(iterator.hasNext()) {
+				parameterName = iterator.next();
+				
+				if (parameterName.equals("-c")) {
+					buildString = iterator.next();
+				
+				} else if (parameterName.equals("-o")) {
+					outputPath = Paths.get(iterator.next());
+					
+				} else if (parameterName.equals("-p")) {
+					namePrefix = iterator.next();
+					
+				} else if (parameterName.equals("-s")) {
+					nameSuffix = iterator.next();
+				}
+			}
+			
+			if (buildString == null) {
+				System.out.println("-c (command) not found");
 				return null;
 			}
 			
-			XcodeBuildCommand consoleTool = new XcodeBuildCommand(parameters.get(0));
+			XcodeBuildCommand consoleTool = new XcodeBuildCommand(buildString);
+			consoleTool.outputPath = outputPath;
+			consoleTool.namePrefix = namePrefix;
+			consoleTool.nameSuffix = nameSuffix;
 			resultCommand = consoleTool;
 		
 		} else if (name.equals("-symbolicate")) {

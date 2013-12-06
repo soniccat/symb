@@ -97,4 +97,10 @@ public class ConsoleTool implements Command {
 		
 		return stream;
 	}
+
+	@Override
+	public int resultCode() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
