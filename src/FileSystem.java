@@ -7,9 +7,15 @@ public interface FileSystem {
 	Iterable<File> files();
 	Iterable<File> files(Path path);
 	
+	void beginWriting(Path path);
+	void writeString(String string, Charset encoding, boolean append);
+	void writeBytes(byte[] byteArray, int countToWrite, boolean append);
+	void finishWriting();
+	
+	void beginReading(Path path);
+	int readBytes(byte[] buffer, int start);
+	void finishReading();
+	
 	void setPath(Path path);
-	void writeString(Path path, String string, Charset encoding, boolean append);
-	void writeBytes(Path path, byte[] byteArray, int countToWrite, boolean append);
-	int readBytes(Path path, byte[] buffer, int start);
 	void createFolder(Path path);
 }

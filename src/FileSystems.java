@@ -4,25 +4,31 @@ import java.nio.file.Paths;
 
 public class FileSystems {
 	public static void copyFile(Path fromPath, Path toPath, FileSystem fromFileSystem, FileSystem toFileSystem) {
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[1024*10];
 		
 		boolean dataIsAvailable = true;
 		boolean append = false;
 		int readedCount = 0;
 		int wasReadedLen;
 		
+		fromFileSystem.beginReading(fromPath);
+		toFileSystem.beginWriting(toPath);
+		
 		while (dataIsAvailable) {
-			wasReadedLen = fromFileSystem.readBytes(fromPath, buffer, readedCount);
+			wasReadedLen = fromFileSystem.readBytes(buffer, 0);
 			if (wasReadedLen == -1) {
 				dataIsAvailable = false;
 				break;
 			}
 
-			toFileSystem.writeBytes(toPath, buffer, wasReadedLen, append);
+			toFileSystem.writeBytes(buffer, wasReadedLen, append);
 			
 			readedCount += wasReadedLen;
 			append = true;
 		}
+		
+		fromFileSystem.finishReading();
+		toFileSystem.finishWriting();
 	}
 	
 	public static void copyDirectory(Path fromPath, Path toPath, FileSystem fromFileSystem, FileSystem toFileSystem) {

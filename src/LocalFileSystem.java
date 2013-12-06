@@ -14,6 +14,10 @@ import java.util.List;
 public class LocalFileSystem implements FileSystem {
 	java.io.File file;
 	
+	Path activeFilePath;
+	FileOutputStream outputStream;
+	FileInputStream inputStream;
+	
 	public LocalFileSystem(Path path) 
 	{
 		this.setPath(path);
@@ -47,37 +51,27 @@ public class LocalFileSystem implements FileSystem {
 		return filesVector;
 	}
 	
-	public void writeBytes(Path path, byte[] byteArray, int countToWrite, boolean append) 
+	public void writeBytes(byte[] byteArray, int countToWrite, boolean append) 
 	{
-		java.io.File file = new java.io.File(path.toString());
-		FileOutputStream outputStream = null;
 		try {
-			outputStream = new FileOutputStream(file, append);
 			outputStream.write(byteArray,0,countToWrite);
-			outputStream.close();
-			
-		} catch (Exception e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void writeString(Path path, String string, Charset encoding, boolean append)
+	public void writeString(String string, Charset encoding, boolean append)
 	{
 		byte[] bytes = string.getBytes(encoding);
-		this.writeBytes(path, bytes, bytes.length, append);
+		this.writeBytes(bytes, bytes.length, append);
 	}
 	
-	public int readBytes(Path path, byte[] buffer, int start) {
-		java.io.File file = new java.io.File(path.toString());
-		FileInputStream inputStream;
-		
+	public int readBytes(byte[] buffer, int start) {
 		int nextByte = 0;
 		try {
-			inputStream = new FileInputStream(file);
-
-			inputStream.skip(start);
-			nextByte = inputStream.read(buffer, 0, buffer.length);
-			inputStream.close();
+			this.inputStream.skip(start);
+			nextByte = this.inputStream.read(buffer, 0, buffer.length);
 		} catch (Exception e) {
 			e.printStackTrace();
 			nextByte = -1;
@@ -89,6 +83,68 @@ public class LocalFileSystem implements FileSystem {
 	public void createFolder(Path path) {
 		java.io.File file = new java.io.File(path.toString());
 		file.mkdirs();
+	}
+	
+	public void prepareToWriteOrRead() {
+		if(this.inputStream != null) {
+			this.finishReading();
+		}
+		
+		if(this.outputStream != null) {
+			this.finishWriting();
+		}
+	}
+
+	@Override
+	public void beginWriting(Path path) {
+		this.prepareToWriteOrRead();
+		
+		this.activeFilePath = path;
+		java.io.File file = new java.io.File(this.activeFilePath.toString());
+		try {
+			this.outputStream = new FileOutputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			this.activeFilePath = null;
+			this.outputStream = null;
+		}
+	}
+
+	@Override
+	public void finishWriting() {
+		try {
+			this.outputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.outputStream = null;
+		this.activeFilePath = null;
+	}
+
+	@Override
+	public void beginReading(Path path) {
+		this.prepareToWriteOrRead();
+		
+		this.activeFilePath = path;
+		java.io.File file = new java.io.File(this.activeFilePath.toString());
+		try {
+			this.inputStream = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			this.activeFilePath = null;
+			this.inputStream = null;
+		}
+	}
+
+	@Override
+	public void finishReading() {
+		try {
+			this.inputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.inputStream = null;
+		this.activeFilePath = null;
 	}
 }
 
