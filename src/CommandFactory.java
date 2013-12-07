@@ -49,6 +49,7 @@ public class CommandFactory {
 			String parameterName = null;
 			Path crashLogPath = null;
 			Path outputPath = null;
+			Path searchPath = Paths.get(".");
 			String architecture = null;
 			Path atosPath = Paths.get("/Applications/Xcode.app/Contents/Developer/usr/bin/atos");
 			while(iterator.hasNext()) {
@@ -65,6 +66,9 @@ public class CommandFactory {
 					
 				} else if (parameterName.equals("-atos")) {
 					atosPath = Paths.get(iterator.next());
+					
+				} else if (parameterName.equals("-s")) {
+					searchPath = Paths.get(iterator.next());
 				}
 			}
 			
@@ -87,7 +91,7 @@ public class CommandFactory {
 	    	symbolicateAll.crashLogPath = crashLogPath;
 	    	symbolicateAll.outputPath = outputPath;
 
-	    	LocalFileSystem fs = new LocalFileSystem(Paths.get("."));
+	    	LocalFileSystem fs = new LocalFileSystem(searchPath);
 	    	XcodePackageManager pm = new XcodePackageManager(fs);
 
 	    	LocalFileSystem fs2 = new LocalFileSystem(Paths.get("."));
