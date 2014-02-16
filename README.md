@@ -15,7 +15,7 @@ and app and dSYM files will be saved in separate directory.
 
     java -jar ./XcodeBuilder -symbolicate -c "./crash.crash" -o "./symbolicated" -arch armv7
 
-and I will have symbolicated crashlogs for every stored version. The tool performs a manuall sybolicaitons according this rules: http://stackoverflow.com/questions/13574933/ios-crash-reports-atos-not-working-as-expected/13576028#13576028
+and I will have symbolicated crashlogs for every stored version which have the same UUID with the crashlog (https://developer.apple.com/library/ios/qa/qa1765/_index.html). The tool performs a manuall sybolicaitons according this rules: http://stackoverflow.com/questions/13574933/ios-crash-reports-atos-not-working-as-expected/13576028#13576028
 
 3) Light ftp synchronization. It means all new files since the last synchronization will be uploaded and downloaded.
 
