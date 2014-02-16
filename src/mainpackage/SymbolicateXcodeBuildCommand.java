@@ -2,6 +2,7 @@ package mainpackage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+import java.util.Vector;
 
 public class SymbolicateXcodeBuildCommand implements Command {
 
@@ -26,7 +27,7 @@ public class SymbolicateXcodeBuildCommand implements Command {
 		
 		//loading build UUID
 		DwarfDumpTool dwarfDump = new DwarfDumpTool();
-		String appUUID = dwarfDump.loadBuildUUID(executablePath);
+		Vector<String> appUUIDs = dwarfDump.loadBuildUUID(executablePath);
 		
 		XcodeCrashlogParser crashLogParser = new XcodeCrashlogParser();
 		crashLogParser.parse(crashLog);
@@ -35,15 +36,21 @@ public class SymbolicateXcodeBuildCommand implements Command {
 			System.out.printf("Can't find load address in crashlog");
 		}
 		
-		if (!appUUID.equals(crashLogParser.buildUUID)) {
+		if (!appUUIDs.contains(crashLogParser.buildUUID)) {
 			return;
 		}
 		
 		System.out.printf("crashlog build UUID = %s\n",crashLogParser.buildUUID);
 		System.out.printf("crashlog load address = %s\n",crashLogParser.loadAddress);
+		System.out.printf("crashlog architecture = %s\n",crashLogParser.architecure);
+		
+		String arch = crashLogParser.architecure;
+		if (this.architecture != null) {
+			arch = this.architecture;
+		}
 		
 		//loading vmaddr
-		String[] otoolStrings = {"otool", "-arch", this.architecture, "-l", executablePath.toString()};
+		String[] otoolStrings = {"otool", "-arch", arch, "-l", executablePath.toString()};
 		ConsoleTool otool = new ConsoleTool(otoolStrings);
 		otool.run();
 				
@@ -70,7 +77,7 @@ public class SymbolicateXcodeBuildCommand implements Command {
 			String resultHex = "0x" + Integer.toHexString(resultAddress);
 			//System.out.printf("%s + %s - %s = %s\n", otoolParser.vmaddr, address, crashLogParser.loadAddress, resultHex);
 			
-			String[] atosString = {this.atosPath.toString(), "-arch", this.architecture, "-o", executablePath.toString(), resultHex};
+			String[] atosString = {this.atosPath.toString(), "-arch", arch, "-o", executablePath.toString(), resultHex};
 			ConsoleTool atos = new ConsoleTool(atosString);
 			atos.run();
 			

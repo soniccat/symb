@@ -9,6 +9,7 @@ public class XcodeCrashlogParser implements StringParser {
 
 	String loadAddress;
 	String buildUUID;
+	String architecure;
 	Collection<String> stackAdresses;
 	Collection<String> stackStrings;
 	
@@ -18,6 +19,7 @@ public class XcodeCrashlogParser implements StringParser {
 		parseLoadAddress(string);
 		parseStackAddresses(string);
 		parseBuildUUID(string);
+		parseArchitecture(string);
 	}
 
 	private void parseStackAddresses(String string) 
@@ -69,4 +71,20 @@ public class XcodeCrashlogParser implements StringParser {
 		}
 	}
 
+	private void parseArchitecture(String string) 
+	{
+		Pattern p = Pattern.compile("Binary Images:\n {0,3}[^\\+]+[^ ]+ ([^ ]+)");
+		Matcher matcher = p.matcher(string);
+		
+		while (matcher.find()) {
+		    this.architecure = matcher.group(1);
+		    if (this.architecure != null) {
+		    	break;
+		    }
+		}
+		
+		if(this.architecure == null) {
+			System.out.print("Can't find architecure in crashlog");
+		}
+	}
 }

@@ -1,5 +1,6 @@
 package mainpackage;
 
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +10,7 @@ public class DwarfDumpTool extends ConsoleTool {
 		super();
 	}
 
-	public String loadBuildUUID(Path buildPath)
+	public Vector<String> loadBuildUUID(Path buildPath)
 	{
 		String[] dwarfdumpStrings = {"dwarfdump", "--uuid", buildPath.toString()};
 		this.setStrings(dwarfdumpStrings);
@@ -17,24 +18,25 @@ public class DwarfDumpTool extends ConsoleTool {
 		super.run();
 		
 		System.out.printf("%s\n", this.result);
-		String result = parseUUID(this.result);
+		Vector<String> result = parseUUID(this.result);
 		return result;
 	}
 	
-	String parseUUID(String string)
+	Vector<String> parseUUID(String string)
 	{
 		Pattern p = Pattern.compile("UUID: ([^ ]+)");
 		Matcher matcher = p.matcher(string);
-		String result = "";
+		String uuid = "";
+		Vector<String> resultVector = new Vector<String>();
 		
 		while (matcher.find()) {
-			result = matcher.group(1);
-		    if (result != null) {
-		    	break;
+			uuid = matcher.group(1);
+		    if (uuid != null) {
+		    	uuid = uuid.replaceAll("-", "");
+		    	resultVector.add(uuid.toLowerCase());
 		    }
 		}
-		
-		result = result.replaceAll("-", "");
-		return result.toLowerCase();
+
+		return resultVector;
 	}
 }

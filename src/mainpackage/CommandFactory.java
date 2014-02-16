@@ -81,11 +81,6 @@ public class CommandFactory {
 				return null;
 			}
 			
-			if (architecture == null) {
-				System.out.println("-arch (architecture) not found");
-				return null;
-			}
-			
 			SymbolicateFilesCommand symbolicateAll = new SymbolicateFilesCommand();
 	    	symbolicateAll.crashLogPath = crashLogPath;
 	    	symbolicateAll.outputPath = outputPath;
