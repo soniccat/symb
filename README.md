@@ -13,7 +13,7 @@ and app and dSYM files will be saved in separate directory.
 
 2) A symbolcation. Xcode doesn't symbolicate well in my case. When I have a crashlog I run:  
 
-    java -jar ./XcodeBuilder -symbolicate -c "./crash.crash" -o "./symbolicated" -arch armv7
+    java -jar ./XcodeBuilder -symbolicate -c "./crash.crash" -o "./symbolicated"
 
 and I will have symbolicated crashlogs for every stored version which have the same UUID with the crashlog (https://developer.apple.com/library/ios/qa/qa1765/_index.html). The tool performs a manuall sybolicaitons according this rules: http://stackoverflow.com/questions/13574933/ios-crash-reports-atos-not-working-as-expected/13576028#13576028
 
