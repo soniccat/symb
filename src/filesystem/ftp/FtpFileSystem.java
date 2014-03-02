@@ -1,14 +1,17 @@
-package mainpackage;
-import java.awt.List;
+package filesystem.ftp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Vector;
 
 import org.apache.commons.net.ftp.*;
+
+import filesystem.File;
+import filesystem.FileSystem;
+import filesystem.Files;
+import filesystem.Path;
 
 
 public class FtpFileSystem implements FileSystem{
@@ -46,6 +49,7 @@ public class FtpFileSystem implements FileSystem{
 		if (connected) {
 			try {
 				this.ftp.setFileType(FTP.BINARY_FILE_TYPE);
+				this.ftp.setRemoteVerificationEnabled(false);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

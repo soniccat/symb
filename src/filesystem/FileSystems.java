@@ -1,5 +1,4 @@
-package mainpackage;
-import java.util.Arrays;
+package filesystem;
 import java.nio.charset.Charset;
 import java.util.Vector;
 
@@ -40,7 +39,7 @@ public class FileSystems {
 	//TODO: add error return
 	public static void copyFile(Path fromPath, Path toPath, FileSystem fromFileSystem, FileSystem toFileSystem) {
 		//System.out.printf("copyFile %s\n",fromPath.toString());
-		System.out.printf("copyFile from %s to %s\n",fromFileSystem.absolutePathFromRelativePath(fromPath).toString(), toFileSystem.absolutePathFromRelativePath(toPath).toString() );
+		//System.out.printf("copyFile from %s to %s\n",fromFileSystem.absolutePathFromRelativePath(fromPath).toString(), toFileSystem.absolutePathFromRelativePath(toPath).toString() );
 		
 		byte[] buffer = new byte[1024*50];
 		

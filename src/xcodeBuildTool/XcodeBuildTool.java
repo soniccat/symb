@@ -1,17 +1,29 @@
-package mainpackage;
-import java.io.File;
+package xcodeBuildTool;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import consoleTool.ConsoleTool;
 
-public class XcodeBuldResultParser implements StringParser {
-
+public class XcodeBuildTool extends ConsoleTool {
+	
 	public String appPath;
 	public String dsymPath;
 	
-	public void parse(String string) {
+	public XcodeBuildTool(String command) {
+		super(command);
+	}
+	
+	public void run()
+	{
+		super.run();
+		
+		this.parseResult(this.result);
+	}
+	
+	void parseResult(String result){
 		Pattern p = Pattern.compile("CODESIGNING_FOLDER_PATH ([^\n]+)\n");
-		Matcher matcher = p.matcher(string);
+		Matcher matcher = p.matcher(result);
 		
 		while (matcher.find()) {
 			//System.out.print("Start index: " + matcher.start());

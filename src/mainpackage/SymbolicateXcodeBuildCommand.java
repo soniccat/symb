@@ -1,18 +1,19 @@
 package mainpackage;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Vector;
+
+import consoleTool.atos.AtosTool;
+import consoleTool.dwarfDumpTool.DwarfDumpTool;
+import consoleTool.otool.Otool;
+import filesystem.Path;
 
 public class SymbolicateXcodeBuildCommand implements Command {
 
 	public Path appPath;
 	public String architecture;
-	//public Path crashLogPath;
 	public Path atosPath;
 	public String crashLog;
 	public String symblicatedCrasLog;
-	//public Path outputCrashLogPath;
 
 	@Override
 	public void run() {
@@ -50,46 +51,37 @@ public class SymbolicateXcodeBuildCommand implements Command {
 		}
 		
 		//loading vmaddr
-		String[] otoolStrings = {"otool", "-arch", arch, "-l", executablePath.toString()};
-		ConsoleTool otool = new ConsoleTool(otoolStrings);
+		Otool otool = new Otool();
+		Integer vmaddrValue = otool.loadAddress(arch, executablePath);
 		otool.run();
-				
-		OtoolResultParser otoolParser = new OtoolResultParser();
-		otoolParser.parse(otool.result);
-				
-		if(otoolParser.vmaddr == null) {
-			System.out.printf("Can't find vmaddr in executable: %s",executablePath.toString());
+
+		if(vmaddrValue == 0) {
+			System.out.printf("Can't find vmaddr in executable: %s",executablePath.toString()); 
 			return;
+		} else {
+			System.out.printf("build vmaddr = %s\n",vmaddrValue);
 		}
-				
-		System.out.printf("build vmaddr = %s\n",otoolParser.vmaddr);
 		
-		Integer vmaddrValue = Integer.parseInt(otoolParser.vmaddr.substring(2), 16);
 		Integer loadAddressValue = Integer.parseInt(crashLogParser.loadAddress.substring(2), 16);
-		
 		StringBuilder outCrashLogString = new StringBuilder(crashLog);
+		AtosTool atosTool = new AtosTool(this.atosPath.toString());
 		
 		Iterator<String> stackStringIterator = crashLogParser.stackStrings.iterator();
 		for (String address : crashLogParser.stackAdresses) {
 			Integer addressValue = Integer.parseInt(address.substring(2),16);
-			Integer resultAddress = vmaddrValue + addressValue - loadAddressValue;
+			Integer resultAddress = AtosTool.calcAddress(addressValue, vmaddrValue, loadAddressValue);
 			
-			String resultHex = "0x" + Integer.toHexString(resultAddress);
-			//System.out.printf("%s + %s - %s = %s\n", otoolParser.vmaddr, address, crashLogParser.loadAddress, resultHex);
-			
-			String[] atosString = {this.atosPath.toString(), "-arch", arch, "-o", executablePath.toString(), resultHex};
-			ConsoleTool atos = new ConsoleTool(atosString);
-			atos.run();
+			atosTool.run(resultAddress, arch, executablePath);
 			
 			String stackString = stackStringIterator.next();
 			Integer startIndex = outCrashLogString.indexOf(stackString);
 			
-			String atosResultString = atos.result;
-			if (atosResultString.endsWith("\n")) {
+			String atosResultString = atosTool.result;
+			if (atosResultString != null && atosResultString.endsWith("\n")) {
 				atosResultString = atosResultString.substring(0, atosResultString.length()-1);
 			}
 			
-			if (atosResultString.equals(resultHex) == false) {
+			if (atosResultString != null) {
 				outCrashLogString.replace(startIndex, startIndex+stackString.length(), atosResultString);
 			}
 		}

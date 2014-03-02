@@ -1,15 +1,18 @@
-package mainpackage;
+package filesystem.local;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.List;
+
+import filesystem.File;
+import filesystem.FileSystem;
+import filesystem.Files;
+import filesystem.Path;
 
 public class LocalFileSystem implements FileSystem {
 	java.io.File file;

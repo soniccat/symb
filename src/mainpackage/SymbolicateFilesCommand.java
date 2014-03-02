@@ -2,6 +2,9 @@ package mainpackage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import filesystem.Files;
+import filesystem.Path;
+
 
 public class SymbolicateFilesCommand implements Command {
 

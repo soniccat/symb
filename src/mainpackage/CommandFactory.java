@@ -2,6 +2,9 @@ package mainpackage;
 import java.util.Iterator;
 import java.util.Vector;
 
+import filesystem.Path;
+import filesystem.local.LocalFileSystem;
+
 public class CommandFactory {
 	public Command createCommand(String name, Vector<String> parameters)
 	{

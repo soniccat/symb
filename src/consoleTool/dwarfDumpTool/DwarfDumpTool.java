@@ -1,12 +1,15 @@
-package mainpackage;
+package consoleTool.dwarfDumpTool;
 
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import consoleTool.ConsoleTool;
+import filesystem.Path;
+
 public class DwarfDumpTool extends ConsoleTool {
 
-	DwarfDumpTool() {
+	public DwarfDumpTool() {
 		super();
 	}
 

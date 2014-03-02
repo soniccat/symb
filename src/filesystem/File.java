@@ -1,4 +1,5 @@
-package mainpackage;
+package filesystem;
+
 
 public interface File {
 	Path path();

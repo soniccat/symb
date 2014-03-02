@@ -1,6 +1,9 @@
 package mainpackage;
 import java.nio.charset.StandardCharsets;
 
+import filesystem.FileSystem;
+import filesystem.Path;
+
 public class XcodeCrashlogManager extends FileManager {
 	
 	public XcodeCrashlogManager(FileSystem fileSystem) {

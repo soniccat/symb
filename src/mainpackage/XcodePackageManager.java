@@ -4,6 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 
+import filesystem.File;
+import filesystem.FileSystem;
+import filesystem.FileSystems;
+import filesystem.Path;
+import filesystem.local.LocalFileSystem;
+
 public class XcodePackageManager extends FileManager {
 	
 	public String namePrefix;

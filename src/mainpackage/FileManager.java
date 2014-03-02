@@ -1,5 +1,7 @@
 package mainpackage;
 
+import filesystem.FileSystem;
+
 public abstract class FileManager {
 	FileSystem fileSystem;
 	

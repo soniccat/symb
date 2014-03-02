@@ -2,9 +2,13 @@ package mainpackage;
 
 import java.util.Date;
 
+import xcodeBuildTool.XcodeBuildTool;
+import filesystem.Path;
+import filesystem.local.LocalFileSystem;
+
 
 public class XcodeBuildCommand implements Command {
-	public ConsoleTool xcodeBuildTool;
+	public XcodeBuildTool xcodeBuildTool;
 	public Path outputPath;
 	public String namePrefix;
 	public String nameSuffix;
@@ -13,26 +17,23 @@ public class XcodeBuildCommand implements Command {
 	
 	public XcodeBuildCommand(String commandLine) 
 	{
-		xcodeBuildTool = new ConsoleTool(commandLine);
+		this.xcodeBuildTool = new XcodeBuildTool(commandLine);
 	}
 
 	@Override
 	public void run() {
 		Date startDate = new Date();
-		xcodeBuildTool.run();
-
-		XcodeBuldResultParser resultParser = new XcodeBuldResultParser();
-		resultParser.parse(xcodeBuildTool.result);
+		this.xcodeBuildTool.run();
 		
-		if (resultParser.appPath == null) {
+		if (this.xcodeBuildTool.appPath == null) {
 			System.out.println("CODESIGNING_FOLDER_PATH wasn't found. Add variables logging in your build step.");
 			this.resultCode = 1;
 			return;
 		}
 		
-		System.out.printf("parse result: %s %s\n", resultParser.appPath, resultParser.dsymPath);
+		System.out.printf("parse result: %s %s\n", this.xcodeBuildTool.appPath, this.xcodeBuildTool.dsymPath);
 		
-		java.io.File file = new java.io.File(resultParser.appPath.toString());
+		java.io.File file = new java.io.File(this.xcodeBuildTool.appPath.toString());
 		Date fileDate = new Date(file.lastModified());
 		
 		if (startDate.compareTo(fileDate) >= 0) {
@@ -42,8 +43,8 @@ public class XcodeBuildCommand implements Command {
 		}
 		
 		XcodePackage pack = new XcodePackage();
-		pack.appPath = new Path(resultParser.appPath);
-		pack.dsymPath = new Path(resultParser.dsymPath);
+		pack.appPath = new Path(this.xcodeBuildTool.appPath);
+		pack.dsymPath = new Path(this.xcodeBuildTool.dsymPath);
 		
 		LocalFileSystem fileSystem = new LocalFileSystem(new Path("."));
 		fileSystem.createFolder(this.outputPath);

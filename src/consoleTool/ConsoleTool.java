@@ -1,26 +1,28 @@
-package mainpackage;
+package consoleTool;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
+import mainpackage.Command;
+
 
 public class ConsoleTool implements Command {
-	String[] strings;
-	String result;
+	protected String[] strings;
+	public String result;
 	
-	ConsoleTool(String string) 
+	public ConsoleTool(String string) 
 	{
 		this.strings = new String[] {string};
 	}
 	
-	ConsoleTool(String[] strings)
+	public ConsoleTool(String[] strings)
 	{
 		this.strings = strings;
 	}
 	
-	ConsoleTool()
+	public ConsoleTool()
 	{
 		
 	}

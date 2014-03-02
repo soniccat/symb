@@ -1,5 +1,4 @@
-package mainpackage;
-import java.io.FileNotFoundException;
+package filesystem;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;

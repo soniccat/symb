@@ -1,10 +1,14 @@
 package mainpackage;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import filesystem.FileSystems;
+import filesystem.Path;
+import filesystem.ftp.FtpFileSystem;
+import filesystem.local.LocalFileSystem;
 
 
 public class SyncFilesCommand implements Command {

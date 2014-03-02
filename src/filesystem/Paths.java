@@ -1,4 +1,4 @@
-package mainpackage;
+package filesystem;
 
 public class Paths {
 }
