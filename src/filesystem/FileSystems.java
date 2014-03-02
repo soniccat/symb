@@ -41,7 +41,7 @@ public class FileSystems {
 		//System.out.printf("copyFile %s\n",fromPath.toString());
 		//System.out.printf("copyFile from %s to %s\n",fromFileSystem.absolutePathFromRelativePath(fromPath).toString(), toFileSystem.absolutePathFromRelativePath(toPath).toString() );
 		
-		byte[] buffer = new byte[1024*50];
+		byte[] buffer = new byte[5*1024*1024];
 		
 		boolean dataIsAvailable = true;
 		boolean append = false;

@@ -55,6 +55,7 @@ public class SyncFilesCommand implements Command {
 		ftpFs.setPath(new Path(ftpTail));
 
 		LocalFileSystem lfs = new LocalFileSystem(new Path("./"));
+		lfs.createFolder(this.localPath);
 		lfs.setPath(this.localPath);
 
 		

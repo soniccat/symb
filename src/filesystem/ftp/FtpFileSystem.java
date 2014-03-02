@@ -16,6 +16,11 @@ import filesystem.Path;
 
 public class FtpFileSystem implements FileSystem{
 	
+	String url;
+	String login;
+	String password;
+	Path cachedPath;
+	
 	//Path activeFilePath;
 	FTPClient ftp;
 	
@@ -24,14 +29,17 @@ public class FtpFileSystem implements FileSystem{
 	
 	public boolean connect(String url, String login, String password)
 	{
+		this.url = url;
+		this.login = login;
+		this.password = password;
+		
 		this.ftp = new FTPClient();
 		
 		try {
 			ftp.connect(url);
 			ftp.login(login, password);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
 		}
 		
 		int reply = this.ftp.getReplyCode();
@@ -39,8 +47,7 @@ public class FtpFileSystem implements FileSystem{
 			try {
 				this.ftp.disconnect();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.logException(e);
 			}
 		}
 		
@@ -50,9 +57,11 @@ public class FtpFileSystem implements FileSystem{
 			try {
 				this.ftp.setFileType(FTP.BINARY_FILE_TYPE);
 				this.ftp.setRemoteVerificationEnabled(false);
+				this.ftp.setControlKeepAliveTimeout(300);
+				this.ftp.setBufferSize(0);
+				this.ftp.enterLocalPassiveMode();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				this.logException(e1);
 			}
 		}
 		
@@ -64,8 +73,7 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			this.ftp.disconnect();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
 		}
 	}
 
@@ -79,8 +87,7 @@ public class FtpFileSystem implements FileSystem{
 				result = new Path(this.ftp.printWorkingDirectory());
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
 		}
 		
 		return result;
@@ -106,8 +113,13 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			p = new Path(this.ftp.printWorkingDirectory()).parentPath();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
+			
+			try {
+				p = new Path(this.ftp.printWorkingDirectory()).parentPath();
+			} catch (IOException e1) {
+				this.logException(e1);
+			}
 		}
 		
 		return p;
@@ -123,8 +135,16 @@ public class FtpFileSystem implements FileSystem{
 			files = this.ftp.listFiles(path, filter);
 			result = new FtpFile(files[0], this.path());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
+			
+			try {
+				String path = parentPath().toString();
+				files = this.ftp.listFiles(path, filter);
+				result = new FtpFile(files[0], this.path());
+			} catch (IOException e1) {
+				this.logException(e1);
+			}
+			
 		}
 		
 		return result;
@@ -141,14 +161,42 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			files = this.ftp.listFiles(path.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
+			
+			try {
+				files = this.ftp.listFiles(path.toString());
+			} catch (IOException e1) {
+				this.logException(e1);
+			}
 		}
 		if (files != null && files.length > 0) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	void logException(IOException e)
+	{
+		int reply = this.ftp.getReplyCode();
+		System.out.printf("message=%s\nlocalized message=%s\nreply code=%d\nstring=%s\n",e.getMessage(), e.getLocalizedMessage(), reply,this.ftp.getReplyString());
+		for(String s : this.ftp.getReplyStrings()) {
+			System.out.print(s);
+		}
+		
+		e.printStackTrace();
+		this.reconnect();
+	}
+	
+	void reconnect()
+	{
+		System.out.print("Start reconnecting...");
+		Path currentPath = this.cachedPath;
+		
+		this.disconnect();
+		this.connect(url, login, password);
+		this.setPath(currentPath);
+		System.out.println("reconnected");
 	}
 
 	@Override
@@ -159,11 +207,19 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			files = this.ftp.listFiles(path.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
+			try {
+				files = this.ftp.listFiles(path.toString());
+			} catch (IOException e1) {
+				this.logException(e1);
+			}
 		}
 		
 		Vector<File> vector = new Vector<File>();
+		if (files == null) {
+			return vector;
+		}
+		
 		for (FTPFile file : Arrays.asList(files)) {
 			String name = file.getName();
 			if (name.equals(".") || name.equals("..")) {
@@ -196,7 +252,13 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			this.outputStream = this.ftp.storeFileStream(path.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			this.logException(e);
+			
+			try {
+				this.outputStream = this.ftp.storeFileStream(path.toString());
+			} catch (IOException e1) {
+				this.logException(e1);
+			}
 		}
 	}
 
@@ -211,8 +273,13 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			this.outputStream.write(byteArray,0,countToWrite);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
+			
+			try {
+				this.outputStream.write(byteArray,0,countToWrite);
+			} catch (IOException e1) {
+				this.logException(e1);
+			}
 		}
 	}
 
@@ -221,14 +288,13 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			this.outputStream.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			this.logException(e);
 		}
 		
 		try {
 			this.ftp.completePendingCommand();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
 		}
 		this.outputStream = null;
 	}
@@ -241,7 +307,13 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			this.inputStream = this.ftp.retrieveFileStream(path.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			this.logException(e);
+			
+			try {
+				this.inputStream = this.ftp.retrieveFileStream(path.toString());
+			} catch (IOException e1) {
+				this.logException(e1);
+			}
 		}
 	}
 
@@ -249,7 +321,9 @@ public class FtpFileSystem implements FileSystem{
 	public int readBytes(byte[] buffer, int start) {
 		int nextByte = 0;
 		try {
-			this.inputStream.skip(start);
+			if (start > 0) {
+				this.inputStream.skip(start);
+			}
 			nextByte = this.inputStream.read(buffer, 0, buffer.length);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -264,14 +338,13 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			this.inputStream.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			this.logException(e);
 		}
 		
 		try {
 			this.ftp.completePendingCommand();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
 		}
 		this.inputStream = null;
 	}
@@ -288,12 +361,18 @@ public class FtpFileSystem implements FileSystem{
 	@Override
 	public void setPath(Path path) {
 		path = this.absolutePathFromRelativePath(path);
+		this.cachedPath = path;
 		
 		try {
 			this.ftp.changeWorkingDirectory(path.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
+			
+			try {
+				this.ftp.changeWorkingDirectory(path.toString());
+			} catch (IOException e1) {
+				this.logException(e1);
+			}
 		}
 	}
 
@@ -304,11 +383,20 @@ public class FtpFileSystem implements FileSystem{
 		try {
 			this.ftp.makeDirectory(path.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logException(e);
+			
+			try {
+				this.ftp.makeDirectory(path.toString());
+			} catch (IOException e1) {
+				this.logException(e1);
+			}
 		}
 	}
 
+	public String toString()
+	{
+		return this.path().toString();
+	}
 }
 
 class FtpFile implements File

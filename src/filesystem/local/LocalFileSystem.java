@@ -192,6 +192,11 @@ public class LocalFileSystem implements FileSystem {
 		this.inputStream = null;
 		this.activeFilePath = null;
 	}
+	
+	public String toString()
+	{
+		return this.path().toString();
+	}
 }
 
 class LocalFile implements File {
