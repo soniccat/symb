@@ -10,6 +10,7 @@ import mainpackage.Command;
 
 public class ConsoleTool implements Command {
 	protected String[] strings;
+	protected String[] envp;
 	public String result;
 	
 	public ConsoleTool(String string) 
@@ -31,6 +32,10 @@ public class ConsoleTool implements Command {
 		this.strings = strings;
 	}
 	
+	public void setEnvp(String[] envp) {
+		this.envp = envp;
+	}
+	
 	public void run() 
 	{
 		try {
@@ -39,9 +44,9 @@ public class ConsoleTool implements Command {
 			System.out.printf("Start: %s\n",Arrays.toString(this.strings));
 			
 			if (strings.length == 1) {
-				p = Runtime.getRuntime().exec(strings[0]);
+				p = Runtime.getRuntime().exec(strings[0],this.envp);
 			}else {
-				p = Runtime.getRuntime().exec(strings);
+				p = Runtime.getRuntime().exec(strings,this.envp);
 			}
 			
 			InputStream stream = this.streamFromProcess(p);
@@ -65,12 +70,12 @@ public class ConsoleTool implements Command {
 				
 				stream = this.streamFromProcess(p);
 				
-				if(!this.isRunning(p)) {
+				if(!this.isRunning(p) && stream == null) {
 					break;
 				}
 				
 				reader = new BufferedReader(new InputStreamReader(stream));
-			} while(this.isRunning(p));
+			} while(this.isRunning(p) || stream != null);
 			
 			result = out.toString();
 			System.out.println("Completed");

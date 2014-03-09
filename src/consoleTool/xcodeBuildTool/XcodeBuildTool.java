@@ -1,4 +1,4 @@
-package xcodeBuildTool;
+package consoleTool.xcodeBuildTool;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

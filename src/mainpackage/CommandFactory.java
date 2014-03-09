@@ -2,6 +2,7 @@ package mainpackage;
 import java.util.Iterator;
 import java.util.Vector;
 
+import consoleTool.xcrun.XcrunTool;
 import filesystem.Path;
 import filesystem.local.LocalFileSystem;
 
@@ -157,6 +158,60 @@ public class CommandFactory {
 			syncCommand.subDirectorySyncCount = subDirectorySyncCount;
 			
 			resultCommand = syncCommand;
+		
+		} else if (name.equals("-archive")) {
+			Iterator<String> iterator = parameters.iterator();
+			String parameterName = null;
+			
+			String sign = null;
+			Path provisionProfilePath = null;
+			Path appPath = null;
+			Path outPath = null;
+			
+			while(iterator.hasNext()) {
+				parameterName = iterator.next();
+				
+				if (parameterName.equals("-p")) {
+					provisionProfilePath = new Path(iterator.next());
+				
+				} else if (parameterName.equals("-a")) {
+					appPath = new Path(iterator.next());
+					
+				} else if (parameterName.equals("-o")) {
+					outPath = new Path(iterator.next());
+				
+				} else if (parameterName.equals("-s")) {
+					sign = iterator.next();
+				}
+			}
+			
+			if (provisionProfilePath == null) {
+				System.out.println("-p (provisionProfile path) not found");
+				return null;
+			}
+			
+			if (appPath == null) {
+				System.out.println("-a (application folder path) not found");
+				return null;
+			}
+			
+			if (sign == null) {
+				System.out.println("-s (sign) not found");
+				return null;
+			}
+			
+			if (outPath == null) {
+				System.out.println("-o (output file path) not found");
+				return null;
+			}
+			
+			CreateIpaCommand createIpaCommand = new CreateIpaCommand();
+			createIpaCommand.sign = sign;
+			createIpaCommand.appPath = appPath;
+			createIpaCommand.outPath = outPath;
+			createIpaCommand.provisionProfilePath = provisionProfilePath;
+			
+			resultCommand = createIpaCommand;
 		}
 		
 		return resultCommand;

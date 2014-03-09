@@ -2,7 +2,7 @@ package mainpackage;
 
 import java.util.Date;
 
-import xcodeBuildTool.XcodeBuildTool;
+import consoleTool.xcodeBuildTool.XcodeBuildTool;
 import filesystem.Path;
 import filesystem.local.LocalFileSystem;
 

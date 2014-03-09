@@ -58,7 +58,7 @@ public class FtpFileSystem implements FileSystem{
 				this.ftp.setFileType(FTP.BINARY_FILE_TYPE);
 				this.ftp.setRemoteVerificationEnabled(false);
 				this.ftp.setControlKeepAliveTimeout(300);
-				this.ftp.setBufferSize(0);
+				this.ftp.setBufferSize(5*1024*1024);
 				this.ftp.enterLocalPassiveMode();
 			} catch (IOException e1) {
 				this.logException(e1);

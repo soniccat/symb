@@ -10,19 +10,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.nio.charset.Charset;
 
-import org.apache.commons.net.ftp.*;;
+import org.apache.commons.net.ftp.*;
+
+import consoleTool.xcrun.XcrunTool;
+import filesystem.Path;
 
 /*
  * configurations
  * -build "xcodebuild -workspace /Users/username/foldername/superapp.xcworkspace -scheme TargetName -configuration Debug build"
  * -symbolicate -c "./crash.crash" -o "./symbolicated" -arch armv7
  * -ftpsync -l ./uploaded -f ftp/path/folder -n name -p pass -s ./synclog -d 2
+ * -archive -a ./folder/appFile -o ./folder/ipaFile -s signString -p ./folder/provisionProfile
  */
 
 public class Main 
 {	
     public static void main ( String [] arguments )
-    {
+    {    	
     	if (arguments.length == 0) {
     		System.out.print(helpString);
     		return;
@@ -48,6 +52,7 @@ public class Main
 "\tXcodeBuilder -build [-c buildString] [-o outputFolder] [-p packageFolderPrefix] [-s packageFolderSuffix]\n" +
 "\tXcodeBuilder -symbolicate [-c crashLogPath] [-arch architecture] [-s packagesFolderPath] [-atos atospath]\n"+
 "\tXcodeBuilder -ftpsync [-l localPath] [-f ftpPath] [-n ftpName] [-p ftpPass] [-s syncLogFile] [-d deepOfSyncing]\n"+
+"\tXcodeBuilder -archive [-a appFolder] [-o ipaOutputFolder] [-s sign] [-p profisionProfile]\n"+
 "\n"+
 "EXAMPLES\n" +
 "\tTo store a build result in a package:\n"+
@@ -57,5 +62,9 @@ public class Main
 "\t-symbolicate -c ./crash.crash -o ./symbolicated -arch armv7 -s ./builds\n" +
 "\t\n" +
 "\tTo sync folder with ftp:\n" +
-"\t-ftpsync -l ./uploaded -f ftp/path/folder -n name -p pass -s ./synclog -d 2\n";
+"\t-ftpsync -l ./uploaded -f ftp/path/folder -n name -p pass -s ./synclog -d 2\n" +
+"\t\n" +
+"\tTo create ipa file:\n" +
+"\t-archive -a ./lastbuild.app -o ./out/app.ipa -s \"my ceritficate\" -p \"profisionProfile\"\n";
+    
 }
