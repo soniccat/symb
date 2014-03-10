@@ -21,4 +21,8 @@ and I will have symbolicated crashlogs for every stored version which have the s
 
     java -jar ./XcodeBuilder -ftpsync -l ./uploaded -f ftp/path/folder -n name -p pass -s ./synclog -d 2
 
-4) Create a ftp store for your builds with an ability to download it through html page.
+4) Create an ipa file.
+
+    java -jar ./XcodeBuilder -archive -a ./folder/appFile -o ./folder/ipaFile -s signString -p ./folder/provisionProfile
+
+5) In progress: Create a ftp store for your builds with an ability to download it through html page.
