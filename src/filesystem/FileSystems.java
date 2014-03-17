@@ -85,8 +85,7 @@ public class FileSystems {
 		toFileSystem.setPath(new Path(folderPath));
 		toPath = new Path(folderPath);
 		
-		System.out.printf("copy directory from %s to %s\n",fromFileSystem.absolutePathFromRelativePath(fromPath).toString(), toFileSystem.absolutePathFromRelativePath(toPath).toString() );
-		
+		//System.out.printf("copy directory from %s to %s\n",fromFileSystem.absolutePathFromRelativePath(fromPath).toString(), toFileSystem.absolutePathFromRelativePath(toPath).toString() );
 		
 		Iterable<File> files = fromFileSystem.files();
 		for (File file : files) {

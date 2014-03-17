@@ -22,7 +22,7 @@ public class XcodeBuildTool extends ConsoleTool {
 	}
 	
 	void parseResult(String result){
-		Pattern p = Pattern.compile("CODESIGNING_FOLDER_PATH ([^\n]+)\n");
+		Pattern p = Pattern.compile("CODESIGNING_FOLDER_PATH[ =]([^\n]+)\n");
 		Matcher matcher = p.matcher(result);
 		
 		while (matcher.find()) {
