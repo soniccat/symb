@@ -49,7 +49,7 @@ public class Main
 "\tXcodeBuilder — build and store and symbolicate your builds\n" +
 "\n" +
 "SYNOPSIS\n" +
-"\tXcodeBuilder -build [-c buildString] [-o outputFolder] [-p packageFolderPrefix] [-s packageFolderSuffix]\n" +
+"\tXcodeBuilder -build [-c buildString] [-o outputFolder] [-p packageFolderPrefix] [-s packageFolderSuffix] [-i appIdentifierToCheck]\n" +
 "\tXcodeBuilder -symbolicate [-c crashLogPath] [-arch architecture] [-s packagesFolderPath] [-atos atospath]\n"+
 "\tXcodeBuilder -ftpsync [-l localPath] [-f ftpPath] [-n ftpName] [-p ftpPass] [-s syncLogFile] [-d deepOfSyncing]\n"+
 "\tXcodeBuilder -archive [-a appFolder] [-o ipaOutputFolder] [-s sign] [-p profisionProfile]\n"+
