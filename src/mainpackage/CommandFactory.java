@@ -214,6 +214,7 @@ public class CommandFactory {
 		String namePrefix = "";
 		String nameSuffix = "";
 		Path outputPath = new Path(".");
+		String identifierToCheck = null;
 		
 		while(iterator.hasNext()) {
 			parameterName = iterator.next();
@@ -229,6 +230,9 @@ public class CommandFactory {
 				
 			} else if (parameterName.equals("-s")) {
 				nameSuffix = iterator.next();
+				
+			} else if (parameterName.equals("-i")) {
+				identifierToCheck = iterator.next();
 			}
 		}
 		
@@ -241,6 +245,7 @@ public class CommandFactory {
 		consoleTool.outputPath = outputPath;
 		consoleTool.namePrefix = namePrefix;
 		consoleTool.nameSuffix = nameSuffix;
+		consoleTool.identifierToCheck = identifierToCheck;
 		resultCommand = consoleTool;
 		return resultCommand;
 	}

@@ -3,7 +3,7 @@ package filesystem;
 
 
 public class Path {
-	final public String separator = "/";
+	final public static String separator = "/";
 	public String string;
 	
 	public Path(String value)
@@ -13,7 +13,7 @@ public class Path {
 	
 	public String fileName()
 	{
-		int lastSlashIndex = this.string.lastIndexOf(this.separator);
+		int lastSlashIndex = this.string.lastIndexOf(Path.separator);
 		if (lastSlashIndex == -1) {
 			return this.string;
 		}
@@ -28,9 +28,9 @@ public class Path {
 	
 	public Path parentPath()
 	{
-		int lastSlashIndex = this.string.lastIndexOf(this.separator);
+		int lastSlashIndex = this.string.lastIndexOf(Path.separator);
 		if (lastSlashIndex == -1) {
-			return new Path(this.separator);
+			return new Path(Path.separator);
 		}
 		
 		return new Path(this.string.substring(0, lastSlashIndex));
@@ -38,7 +38,7 @@ public class Path {
 	
 	public Path firstPart()
 	{
-		int splashIndex = this.string.indexOf(this.separator);
+		int splashIndex = this.string.indexOf(Path.separator);
 		if (splashIndex == -1) {
 			return this;
 		}
@@ -52,7 +52,7 @@ public class Path {
 			return null;
 		}
 		
-		int splashIndex = this.string.indexOf(this.separator);
+		int splashIndex = this.string.indexOf(Path.separator);
 		if (splashIndex == -1) {
 			return null;
 		}
@@ -61,6 +61,6 @@ public class Path {
 	}
 	
 	public Path pathByAppendingFileName(String name) {
-		return new Path(this.string + this.separator + name);
+		return new Path(this.string + Path.separator + name);
 	}
 }

@@ -4,14 +4,16 @@ import java.util.Date;
 
 import consoleTool.xcodeBuildTool.XcodeBuildTool;
 import filesystem.Path;
+import filesystem.Paths;
 import filesystem.local.LocalFileSystem;
-
+import consoleTool.plistBuddy.*;
 
 public class XcodeBuildCommand implements Command {
 	public XcodeBuildTool xcodeBuildTool;
 	public Path outputPath;
 	public String namePrefix;
 	public String nameSuffix;
+	public String identifierToCheck;
 	
 	int resultCode = 0;
 	
@@ -39,6 +41,16 @@ public class XcodeBuildCommand implements Command {
 		if (startDate.compareTo(fileDate) >= 0) {
 			System.out.printf("Building was cancelled, an app file wasn't modified");
 			this.resultCode = 2;
+			return;
+		}
+		
+		//check identifier
+		PlistBuddy plistTool = new PlistBuddy(this.xcodeBuildTool.appPath + Path.separator + "Info.plist");
+		String identifier = plistTool.propertyValue("CFBundleIdentifier");
+		
+		if (this.identifierToCheck != null && !identifier.equals(this.identifierToCheck)) {
+			System.out.printf("App identifier mistmach: you wait %s but have %s. You should clean your project and run bilding again.",this.identifierToCheck, identifier);
+			this.resultCode = 3;
 			return;
 		}
 		
