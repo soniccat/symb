@@ -25,7 +25,7 @@ public class AtosTool extends ConsoleTool {
 		this.setStrings(atosString);
 		super.run();
 		
-		if (this.result.equals(resultHex) == false) {
+		if (this.result.equals(resultHex)) {
 			this.result = null;
 		}
 	}
