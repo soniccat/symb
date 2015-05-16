@@ -20,7 +20,6 @@ public class DwarfDumpTool extends ConsoleTool {
 		
 		super.run();
 		
-		System.out.printf("%s\n", this.result);
 		Vector<String> result = parseUUID(this.result);
 		return result;
 	}

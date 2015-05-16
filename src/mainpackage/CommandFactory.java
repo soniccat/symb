@@ -172,7 +172,7 @@ public class CommandFactory {
 				
 			} else if (parameterName.equals("-s")) {
 				searchPath = new Path(iterator.next());
-			}
+			} 
 		}
 		
 		if (crashLogPath == null) {
@@ -189,15 +189,12 @@ public class CommandFactory {
 		symbolicateAll.crashLogPath = crashLogPath;
 		symbolicateAll.outputPath = outputPath;
 
-		LocalFileSystem fs = new LocalFileSystem(searchPath);
-		XcodePackageManager pm = new XcodePackageManager(fs);
-
 		LocalFileSystem fs2 = new LocalFileSystem(new Path("."));
 		XcodeCrashlogManager cm = new XcodeCrashlogManager(fs2);
 		fs2.createFolder(symbolicateAll.outputPath);
 		fs2.setPath(symbolicateAll.outputPath);
 
-		symbolicateAll.packageManager = pm;
+		symbolicateAll.archiveFolderPath = searchPath;
 		symbolicateAll.crashLogManger = cm;
 		symbolicateAll.architecture = architecture;
 		symbolicateAll.atosPath = atosPath;

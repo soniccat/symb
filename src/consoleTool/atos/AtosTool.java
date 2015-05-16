@@ -12,15 +12,15 @@ public class AtosTool extends ConsoleTool {
 		this.path = path;
 	}
 	
-	public static Integer calcAddress(Integer address, Integer vmaddress, Integer loadAddress)
+	public static Long calcAddress(Long address, Long vmaddress, Long loadAddress)
 	{
-		Integer resultAddress = vmaddress + address - loadAddress;
+		Long resultAddress = vmaddress + address - loadAddress;
 		return resultAddress;
 	}
 	
-	public void run(Integer address, String arch, Path filePath)
+	public void run(Long address, String arch, Path filePath)
 	{		
-		String resultHex = "0x" + Integer.toHexString(address);	
+		String resultHex = "0x" + Long.toHexString(address);	
 		String[] atosString = {this.path.toString(), "-arch", arch, "-o", filePath.toString(), resultHex};
 		this.setStrings(atosString);
 		super.run();

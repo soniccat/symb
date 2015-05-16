@@ -7,18 +7,18 @@ import consoleTool.ConsoleTool;
 import filesystem.Path;
 
 public class Otool extends ConsoleTool {
-	public Integer loadAddress(String arch, Path path)
+	public Long loadAddress(String arch, Path path)
 	{
 		String[] otoolStrings = {"otool", "-arch", arch, "-l", path.toString()};
 		this.setStrings(otoolStrings);
 		
 		super.run();
 		
-		Integer vmaddrValue = this.parseVMaddr(this.result);
+		Long vmaddrValue = this.parseVMaddr(this.result);
 		return vmaddrValue;
 	}
 	
-	Integer parseVMaddr(String string)
+	Long parseVMaddr(String string)
 	{
 		Pattern p = Pattern.compile("segname __TEXT\n   vmaddr ([^\n]+)\n");
 		Matcher matcher = p.matcher(string);
@@ -31,6 +31,6 @@ public class Otool extends ConsoleTool {
 		    }
 		}
 		
-		return Integer.parseInt(addrString.substring(2), 16);
+		return Long.parseLong(addrString.substring(2), 16);
 	}
 }

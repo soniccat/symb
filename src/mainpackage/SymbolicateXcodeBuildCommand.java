@@ -5,11 +5,15 @@ import java.util.Vector;
 import consoleTool.atos.AtosTool;
 import consoleTool.dwarfDumpTool.DwarfDumpTool;
 import consoleTool.otool.Otool;
+import filesystem.File;
 import filesystem.Path;
+import filesystem.local.LocalFileSystem;
 
 public class SymbolicateXcodeBuildCommand implements Command {
 
-	public Path appPath;
+	public final String appEnding = ".app";
+	
+	public Path archivePath;
 	public String architecture;
 	public Path atosPath;
 	public String crashLog;
@@ -17,14 +21,15 @@ public class SymbolicateXcodeBuildCommand implements Command {
 
 	@Override
 	public void run() {
-		String fileName = this.appPath.fileName().toString();
-		String appEnding = ".app";
+		Path appPath = getAppPath();
+		
+		String fileName = appPath.fileName().toString();
 		
 		if (fileName.endsWith(appEnding)) {
 			fileName = fileName.substring(0, fileName.length()-appEnding.length());
 		}
 		
-		Path executablePath = this.appPath.pathByAppendingFileName(fileName);
+		Path executablePath = appPath.pathByAppendingFileName(fileName);
 		
 		//loading build UUID
 		DwarfDumpTool dwarfDump = new DwarfDumpTool();
@@ -33,26 +38,32 @@ public class SymbolicateXcodeBuildCommand implements Command {
 		XcodeCrashlogParser crashLogParser = new XcodeCrashlogParser();
 		crashLogParser.parse(crashLog);
 		
+		System.out.printf("crashlog build UUID = %s\n",crashLogParser.buildUUID);
+		
 		if (crashLogParser.loadAddress == null) {
 			System.out.printf("Can't find load address in crashlog");
 		}
 		
 		if (!appUUIDs.contains(crashLogParser.buildUUID)) {
+			System.out.printf("crashlog UUID is different\n");
 			return;
 		}
 		
-		System.out.printf("crashlog build UUID = %s\n",crashLogParser.buildUUID);
 		System.out.printf("crashlog load address = %s\n",crashLogParser.loadAddress);
 		System.out.printf("crashlog architecture = %s\n",crashLogParser.architecure);
 		
 		String arch = crashLogParser.architecure;
 		if (this.architecture != null) {
-			arch = this.architecture;
+			if (arch != null && this.architecture != null && !this.architecture.equals(arch)){
+				System.out.printf("Warning!: Architecture of crashlog is different = %s\n",arch);
+			}
+			
+			arch = this.architecture;	
 		}
 		
 		//loading vmaddr
 		Otool otool = new Otool();
-		Integer vmaddrValue = otool.loadAddress(arch, executablePath);
+		Long vmaddrValue = otool.loadAddress(arch, executablePath);
 		otool.run();
 
 		if(vmaddrValue == 0) {
@@ -62,14 +73,14 @@ public class SymbolicateXcodeBuildCommand implements Command {
 			System.out.printf("build vmaddr = %s\n",vmaddrValue);
 		}
 		
-		Integer loadAddressValue = Integer.parseInt(crashLogParser.loadAddress.substring(2), 16);
+		Long loadAddressValue = Long.parseLong(crashLogParser.loadAddress.substring(2), 16);
 		StringBuilder outCrashLogString = new StringBuilder(crashLog);
 		AtosTool atosTool = new AtosTool(this.atosPath.toString());
 		
 		Iterator<String> stackStringIterator = crashLogParser.stackStrings.iterator();
 		for (String address : crashLogParser.stackAdresses) {
-			Integer addressValue = Integer.parseInt(address.substring(2),16);
-			Integer resultAddress = AtosTool.calcAddress(addressValue, vmaddrValue, loadAddressValue);
+			Long addressValue = Long.parseLong(address.substring(2),16);
+			Long resultAddress = AtosTool.calcAddress(addressValue, vmaddrValue, loadAddressValue);
 			
 			atosTool.run(resultAddress, arch, executablePath);
 			
@@ -81,14 +92,32 @@ public class SymbolicateXcodeBuildCommand implements Command {
 				atosResultString = atosResultString.substring(0, atosResultString.length()-1);
 			}
 			
-			if (atosResultString != null) {
+			if (atosResultString != null && !isAddressString(atosResultString)) {
 				outCrashLogString.replace(startIndex, startIndex+stackString.length(), atosResultString);
 			}
 		}
 		
 		this.symblicatedCrasLog = outCrashLogString.toString();
 	}
+	
+	public boolean isAddressString(String str) {
+		return str.length() > 1 && str.charAt(1) == 'x';
+	}
 
+	public Path getAppPath() {
+		Path applicationFolderPath = this.archivePath.pathByAppendingFileName("Products").pathByAppendingFileName("Applications");
+		LocalFileSystem lf = new LocalFileSystem(applicationFolderPath);
+		
+		Path resultPath = null;
+		for (File f : lf.files()) {
+			if (f.name().endsWith(appEnding)) {
+				resultPath = f.path();
+			}
+		}
+		
+		return resultPath;
+	}
+	
 	@Override
 	public int resultCode() {
 		// TODO Auto-generated method stub

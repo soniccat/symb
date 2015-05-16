@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import org.apache.commons.net.ftp.*;
 
 import consoleTool.xcrun.XcrunTool;
+import filesystem.Files;
 import filesystem.Path;
 
 /*
@@ -46,25 +47,12 @@ public class Main
     }
     
     static String helpString = "NAME\n" +
-"\tXcodeBuilder — build and store and symbolicate your builds\n" +
+"\tXcodeBuilder — tool for symbolication your builds\n" +
 "\n" +
 "SYNOPSIS\n" +
-"\tXcodeBuilder -build [-c buildString] [-o outputFolder] [-p packageFolderPrefix] [-s packageFolderSuffix] [-i appIdentifierToCheck]\n" +
-"\tXcodeBuilder -symbolicate [-c crashLogPath] [-arch architecture] [-s packagesFolderPath] [-atos atospath]\n"+
-"\tXcodeBuilder -ftpsync [-l localPath] [-f ftpPath] [-n ftpName] [-p ftpPass] [-s syncLogFile] [-d deepOfSyncing]\n"+
-"\tXcodeBuilder -archive [-a appFolder] [-o ipaOutputFolder] [-s sign] [-p profisionProfile]\n"+
+"\tXcodeBuilder -symbolicate [-c crashLogPath] [-arch architecture] [-s archivesFolder] [-atos atospath]\n"+
 "\n"+
 "EXAMPLES\n" +
-"\tTo store a build result in a package:\n"+
-"\t-build \"xcodebuild -workspace /Users/username/foldername/superapp.xcworkspace -scheme TargetName -configuration Debug build\" -o ./builds\n" +
-"\t\n" +
-"\tTo symbolicate a crahslog using saved packages:\n" +
-"\t-symbolicate -c ./crash.crash -o ./symbolicated -arch armv7 -s ./builds\n" +
-"\t\n" +
-"\tTo sync folder with ftp:\n" +
-"\t-ftpsync -l ./uploaded -f ftp/path/folder -n name -p pass -s ./synclog -d 2\n" +
-"\t\n" +
-"\tTo create ipa file:\n" +
-"\t-archive -a ./lastbuild.app -o ./out/app.ipa -s \"my ceritficate\" -p \"profisionProfile\"\n";
-    
+"\tTo symbolicate a crahslog using archives:\n" +
+"\t-symbolicate -c ./crash.crash -o ./symbolicated -arch armv7 -s ./archives\n";    
 }
