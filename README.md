@@ -1,28 +1,25 @@
-XcodeBuilder
+symb
 ============
 
-A tool to store all your builds to be able to symbolicate your crashlog through all of builds.
+The tool to symbolicate a crashlog using stored xarchives. 
 
-Features:
+Usage:
 
-1) Build and store all your builds. I build a project and upload a result by a console script. It's very useful but I overwrite the buld every time. Now I can just write:
+    java -jar ./symb.jar cr.crash -o ./symbolicated
 
-    java -jar ./XcodeBuilder -build "xcodebuild -workspace /Users/username/foldername/superapp.xcworkspace -scheme TargetName -configuration Debug build"
-    
-and app and dSYM files will be saved in separate directory.
+Symbolicated crashlog will be stored in "symbolicated" folder for every xcarhive which have the same UUID with the input crashlog (https://developer.apple.com/library/ios/qa/qa1765/_index.html). The tool performs symbolicaiton according the rules: http://stackoverflow.com/questions/13574933/ios-crash-reports-atos-not-working-as-expected/13576028#13576028. By defaul ~/Library/Developer/Xcode/Archives/ path is used as the source of xcarhive files.
 
-2) A symbolcation. Xcode doesn't symbolicate well in my case. When I have a crashlog I run:  
+Options:
 
-    java -jar ./XcodeBuilder -symbolicate -c "./crash.crash" -o "./symbolicated"
+	-arch <architecture>
+	    Force to set arch parameter of atos. When it is skipped, it is got from a crash log.
 
-and I will have symbolicated crashlogs for every stored version which have the same UUID with the crashlog (https://developer.apple.com/library/ios/qa/qa1765/_index.html). The tool performs a manuall sybolicaitons according this rules: http://stackoverflow.com/questions/13574933/ios-crash-reports-atos-not-working-as-expected/13576028#13576028
+	-s <path>
+	    Path to xarchives folder. The default value is ~/Library/Developer/Xcode/Archives/.
 
-3) Light ftp synchronization. It means all new files since the last synchronization will be uploaded and downloaded.
+	-atos <path>
+	    Path for atos command. The default value is /Applications/Xcode.app/Contents/Developer/usr/bin/atos.
 
-    java -jar ./XcodeBuilder -ftpsync -l ./uploaded -f ftp/path/folder -n name -p pass -s ./synclog -d 2
+	-d
+	    Log all command outputs.
 
-4) Create an ipa file.
-
-    java -jar ./XcodeBuilder -archive -a ./folder/appFile -o ./folder/ipaFile -s signString -p ./folder/provisionProfile
-
-5) In progress: Create a ftp store for your builds with an ability to download it through html page.
