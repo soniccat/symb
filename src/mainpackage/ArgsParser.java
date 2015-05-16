@@ -10,7 +10,7 @@ public class ArgsParser {
 	{
 		String commandName = arguments[0];
 		Vector<String> parameters = new Vector<>();
-		for (int i=1; i<arguments.length; ++i) {
+		for (int i=0; i<arguments.length; ++i) {
 			parameters.add(arguments[i]);
 		}
 		
