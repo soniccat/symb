@@ -11,6 +11,7 @@ import mainpackage.Command;
 public class ConsoleTool implements Command {
 	protected String[] strings;
 	protected String[] envp;
+	protected boolean isDebugMode;
 	public String result;
 	
 	public ConsoleTool(String string) 
@@ -28,6 +29,10 @@ public class ConsoleTool implements Command {
 		
 	}
 	
+	public void setDebugMode(boolean value) {
+		isDebugMode = value;
+	}
+	
 	public void setStrings(String[] strings) {
 		this.strings = strings;
 	}
@@ -41,7 +46,9 @@ public class ConsoleTool implements Command {
 		try {
 			Process p;
 
-			System.out.printf("Start: %s\n",Arrays.toString(this.strings));
+			if (isDebugMode) {
+				System.out.printf("Start: %s\n",Arrays.toString(this.strings));
+			}
 			
 			if (strings.length == 1) {
 				p = Runtime.getRuntime().exec(strings[0],this.envp);
@@ -65,7 +72,9 @@ public class ConsoleTool implements Command {
 					out.append(line);
 					out.append('\n');
 				
-					System.out.println(line);
+					if (isDebugMode) {
+						System.out.println(line);
+					}
 				}
 				
 				stream = this.streamFromProcess(p);
@@ -78,7 +87,10 @@ public class ConsoleTool implements Command {
 			} while(this.isRunning(p) || stream != null);
 			
 			result = out.toString();
-			System.out.println("Completed");
+			
+			if (isDebugMode) {
+				System.out.println("Completed");
+			}
 			
 		} catch (Exception e) {
 			System.out.println("Exception:");

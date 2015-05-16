@@ -2,8 +2,6 @@ package mainpackage;
 import java.util.Iterator;
 import java.util.Vector;
 
-import consoleTool.ConsoleTool;
-import consoleTool.xcrun.XcrunTool;
 import filesystem.Path;
 import filesystem.local.LocalFileSystem;
 
@@ -19,7 +17,7 @@ public class CommandFactory {
 		String parameterName = null;
 		Path crashLogPath = null;
 		Path outputPath = null;
-		Path searchPath = new Path(".");
+		Path searchPath = new Path("~/Library/Developer/Xcode/Archives/");
 		String architecture = null;
 		Path atosPath = new Path("/Applications/Xcode.app/Contents/Developer/usr/bin/atos");
 		boolean isDebug = false;

@@ -18,6 +18,7 @@ public class SymbolicateFileCommand implements Command {
 	public Path atosPath;
 	public String crashLog;
 	public String symblicatedCrasLog;
+	public boolean isDebugMode = false;
 
 	@Override
 	public void run() {
@@ -33,6 +34,7 @@ public class SymbolicateFileCommand implements Command {
 		
 		//loading build UUID
 		DwarfDumpTool dwarfDump = new DwarfDumpTool();
+		dwarfDump.setDebugMode(isDebugMode);
 		Vector<String> appUUIDs = dwarfDump.loadBuildUUID(executablePath);
 		
 		XcodeCrashlogParser crashLogParser = new XcodeCrashlogParser();
@@ -45,7 +47,7 @@ public class SymbolicateFileCommand implements Command {
 		}
 		
 		if (!appUUIDs.contains(crashLogParser.buildUUID)) {
-			System.out.printf("crashlog UUID is different\n");
+			System.out.printf("crashlog UUID is different = %s\n", appUUIDs.toString());
 			return;
 		}
 		
@@ -54,7 +56,7 @@ public class SymbolicateFileCommand implements Command {
 		
 		String arch = crashLogParser.architecure;
 		if (this.architecture != null) {
-			if (arch != null && this.architecture != null && !this.architecture.equals(arch)){
+			if (arch != null && this.architecture != null && this.architecture.compareTo(arch) != 0){
 				System.out.printf("Warning!: Architecture of crashlog is different = %s\n",arch);
 			}
 			
@@ -63,6 +65,7 @@ public class SymbolicateFileCommand implements Command {
 		
 		//loading vmaddr
 		Otool otool = new Otool();
+		otool.setDebugMode(isDebugMode);
 		Long vmaddrValue = otool.loadAddress(arch, executablePath);
 		otool.run();
 
@@ -70,12 +73,13 @@ public class SymbolicateFileCommand implements Command {
 			System.out.printf("Can't find vmaddr in executable: %s",executablePath.toString()); 
 			return;
 		} else {
-			System.out.printf("build vmaddr = %s\n",vmaddrValue);
+			System.out.printf("build vmaddr = 0x%x\n",vmaddrValue);
 		}
 		
 		Long loadAddressValue = Long.parseLong(crashLogParser.loadAddress.substring(2), 16);
 		StringBuilder outCrashLogString = new StringBuilder(crashLog);
 		AtosTool atosTool = new AtosTool(this.atosPath.toString());
+		atosTool.setDebugMode(isDebugMode);
 		
 		Iterator<String> stackStringIterator = crashLogParser.stackStrings.iterator();
 		for (String address : crashLogParser.stackAdresses) {

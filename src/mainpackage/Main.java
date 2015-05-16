@@ -1,20 +1,4 @@
 package mainpackage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.nio.charset.Charset;
-
-import org.apache.commons.net.ftp.*;
-
-import consoleTool.xcrun.XcrunTool;
-import filesystem.Files;
-import filesystem.Path;
 
 public class Main 
 {	

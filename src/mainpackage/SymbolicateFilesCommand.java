@@ -51,10 +51,13 @@ public class SymbolicateFilesCommand implements Command {
 		symbolicateCommand.architecture = this.architecture;
 		symbolicateCommand.atosPath = this.atosPath;
 		symbolicateCommand.crashLog = crashLog;
+		symbolicateCommand.isDebugMode = isDebugMode;
 		symbolicateCommand.run();
 		
 		if (symbolicateCommand.symblicatedCrasLog != null) {
-			this.crashLogManger.addCrashLog(f.name() + ".crash", symbolicateCommand.symblicatedCrasLog);
+			String resultName = f.name() + ".crash";
+			this.crashLogManger.addCrashLog(resultName, symbolicateCommand.symblicatedCrasLog);
+			System.out.printf("Symbolicated to  = %s\n", this.crashLogManger.getStorePath(resultName).toString());
 		}
 	}
 

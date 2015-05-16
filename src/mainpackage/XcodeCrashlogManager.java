@@ -10,11 +10,13 @@ public class XcodeCrashlogManager extends FileManager {
 		super(fileSystem);
 	}
 	
-	public void addCrashLog(String name, String content)
-	{
-		String pathToFile = this.fileSystem.path() + java.io.File.separator + name;
-		this.fileSystem.beginWriting(new Path(pathToFile));
+	public void addCrashLog(String name, String content) {
+		this.fileSystem.beginWriting(getStorePath(name));
 		fileSystem.writeString(content, StandardCharsets.UTF_8, false);
 		this.fileSystem.finishWriting();
+	}
+	
+	public Path getStorePath(String name) {
+		return this.fileSystem.path().pathByAppendingFileName(name);
 	}
 }

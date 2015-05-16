@@ -21,8 +21,7 @@ public class LocalFileSystem implements FileSystem {
 	FileOutputStream outputStream;
 	FileInputStream inputStream;
 	
-	public LocalFileSystem(Path path) 
-	{
+	public LocalFileSystem(Path path) {
 		this.setPath(path);
 	}
 
@@ -55,6 +54,10 @@ public class LocalFileSystem implements FileSystem {
 			
 			//System.out.printf("path %s|%s",currentPath,resultPath.substring(1));
 			resultPath = currentPath + resultPath.substring(1);
+			
+		} else if (resultPath.startsWith("~")) {
+			String homePath = System.getProperty("user.home");
+			resultPath = homePath + resultPath.substring(1);
 		}
 		return new Path(resultPath);
 	}
