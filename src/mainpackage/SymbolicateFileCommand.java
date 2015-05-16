@@ -9,7 +9,7 @@ import filesystem.File;
 import filesystem.Path;
 import filesystem.local.LocalFileSystem;
 
-public class SymbolicateXcodeBuildCommand implements Command {
+public class SymbolicateFileCommand implements Command {
 
 	public final String appEnding = ".app";
 	

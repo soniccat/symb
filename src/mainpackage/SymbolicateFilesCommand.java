@@ -16,6 +16,7 @@ public class SymbolicateFilesCommand implements Command {
 	public String architecture;
 	public Path atosPath;
 	public XcodeCrashlogManager crashLogManger;
+	public boolean isDebugMode = false;
 	
 	@Override
 	public void run() {
@@ -45,7 +46,7 @@ public class SymbolicateFilesCommand implements Command {
 			return;
 		}
 		
-		SymbolicateXcodeBuildCommand symbolicateCommand = new SymbolicateXcodeBuildCommand();
+		SymbolicateFileCommand symbolicateCommand = new SymbolicateFileCommand();
 		symbolicateCommand.archivePath = f.path();
 		symbolicateCommand.architecture = this.architecture;
 		symbolicateCommand.atosPath = this.atosPath;

@@ -16,14 +16,6 @@ import consoleTool.xcrun.XcrunTool;
 import filesystem.Files;
 import filesystem.Path;
 
-/*
- * configurations
- * -build "xcodebuild -workspace /Users/username/foldername/superapp.xcworkspace -scheme TargetName -configuration Debug build"
- * -symbolicate -c "./crash.crash" -o "./symbolicated" -arch armv7
- * -ftpsync -l ./uploaded -f ftp/path/folder -n name -p pass -s ./synclog -d 2
- * -archive -a ./folder/appFile -o ./folder/ipaFile -s signString -p ./folder/provisionProfile
- */
-
 public class Main 
 {	
     public static void main ( String [] arguments )
@@ -45,14 +37,27 @@ public class Main
 
     	System.exit(1);
     }
-    
+
     static String helpString = "NAME\n" +
-"\tXcodeBuilder — tool for symbolication your builds\n" +
+"\tsymb — symbolicate crash logs using xarchives\n" +
 "\n" +
 "SYNOPSIS\n" +
-"\tXcodeBuilder -symbolicate [-c crashLogPath] [-arch architecture] [-s archivesFolder] [-atos atospath]\n"+
+"\tsymb crash-path [-arch <architecture>] [-s <path>] [-atos <path>] [-d]\n"+
+"\n"+
+"OPTIONS\n" +
+"\t-arch <architecture>\n"+
+"\t    Force to set arch parameter of atos. When it is skipped, it is got from a crash log.\n" +
+"\n"+
+"\t-s <path>\n"+
+"\t    Path to xarchives folder. The default value is ~/Library/Developer/Xcode/Archives/.\n" +
+"\n"+
+"\t-atos <path>\n"+
+"\t    Path for atos command. The default value is /Applications/Xcode.app/Contents/Developer/usr/bin/atos.\n" +
+"\n"+
+"\t-d\n"+
+"\t    Log all command outputs.\n" +
 "\n"+
 "EXAMPLES\n" +
-"\tTo symbolicate a crahslog using archives:\n" +
-"\t-symbolicate -c ./crash.crash -o ./symbolicated -arch armv7 -s ./archives\n";    
+"\tTo symbolicate a crashlog:\n" +
+"\tsymb -c ./crash.crash -o ./symbolicated -arch arm64 -s ./archives\n";    
 }
