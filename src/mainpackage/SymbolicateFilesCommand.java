@@ -22,20 +22,25 @@ public class SymbolicateFilesCommand implements Command {
 	public void run() {
 		LocalFileSystem lf = new LocalFileSystem(archiveFolderPath);
 		
-		symbolicateFolder(lf.path(), lf);
+		symbolicateFile(lf.file(), lf);
+	}
+	
+	private void symbolicateFile(File f, LocalFileSystem lf) {
+		if (f.name().endsWith("xcarchive")) {
+			symbolicate(f, lf);
+
+		} else if (f.isDirectory()) {
+			symbolicateFolder(f.path(), lf);
+		}
 	}
 	
 	private void symbolicateFolder(Path path, LocalFileSystem lf) {
 		for (File f : lf.files(path)) {
-			if (f.name().endsWith("xcarchive")) {
-				symbolicateFile(f, lf);
-			} else if (f.isDirectory()) {
-				symbolicateFolder(path.pathByAppendingFileName(f.name()), lf);
-			}
+			symbolicateFile(f, lf);
 		}
 	}
 	
-	private void symbolicateFile(File f, LocalFileSystem lf) {		
+	private void symbolicate(File f, LocalFileSystem lf) {
 		System.out.printf("Looking at %s\n", f.path().toString());
 		String crashLog = null;
 		try {

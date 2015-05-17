@@ -43,5 +43,5 @@ public class Main
 "\n"+
 "EXAMPLES\n" +
 "\tTo symbolicate a crashlog:\n" +
-"\tsymb -c ./crash.crash -o ./symbolicated -arch arm64 -s ./archives\n";    
+"\tsymb ./crash.crash -o ./symbolicated\n";    
 }
