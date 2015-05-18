@@ -13,15 +13,15 @@ Last buld: https://dl.dropboxusercontent.com/u/10976863/symb.jar
 
 Options:
 
-	-arch <architecture>
-	    Force to set arch parameter of atos. When it is skipped, it is got from a crash log.
+-arch <architecture>  
+Force to set arch parameter of atos. When it is skipped, it is got from a crash log.
 
-	-s <path>
-	    Path to xarchives folder. The default value is ~/Library/Developer/Xcode/Archives/.
+-s <path>  
+Path to xarchives folder. The default value is ~/Library/Developer/Xcode/Archives/.
 
-	-atos <path>
-	    Path for atos command. The default value is /Applications/Xcode.app/Contents/Developer/usr/bin/atos.
+-atos <path>  
+Path for atos command. The default value is /Applications/Xcode.app/Contents/Developer/usr/bin/atos.
 
-	-d
-	    Log all command outputs.
+-d  
+Log all command outputs.
 
