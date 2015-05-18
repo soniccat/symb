@@ -23,6 +23,10 @@ public class SymbolicateFileCommand implements Command {
 	@Override
 	public void run() {
 		Path appPath = getAppPath();
+		if (appPath == null) {
+			System.out.printf("the app folder wasn't found\n");
+			return;
+		}
 		
 		String fileName = appPath.fileName().toString();
 		

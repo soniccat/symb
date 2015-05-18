@@ -80,11 +80,14 @@ public class LocalFileSystem implements FileSystem {
 		
 		java.io.File pathFile = new java.io.File(path.toString());
 		java.io.File[] files = pathFile.listFiles();
-		List<java.io.File> list = Arrays.asList(files);
 		
 		Vector<File> filesVector = new Vector<File>();
-		for (java.io.File file : list) {
-			filesVector.add(new LocalFile(file));
+		if (files != null) {
+			List<java.io.File> list = Arrays.asList(files);
+			
+			for (java.io.File file : list) {
+				filesVector.add(new LocalFile(file));
+			}
 		}
 		
 		return filesVector;
