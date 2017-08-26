@@ -9,7 +9,7 @@ Usage:
 
 Symbolicated crashlog will be stored in "symbolicated" folder for every xcarhive which have the same UUID with the input crashlog (https://developer.apple.com/library/ios/qa/qa1765/_index.html). The tool performs symbolicaiton according the rules: http://stackoverflow.com/questions/13574933/ios-crash-reports-atos-not-working-as-expected/13576028#13576028. By defaul ~/Library/Developer/Xcode/Archives/ path is used as the source of xcarhive files.
 
-Last buld: https://dl.dropboxusercontent.com/u/10976863/symb.jar
+Last buld: https://www.dropbox.com/s/uzx6nqollfyo930/symb.jar?dl=0
 
 Options:
 
